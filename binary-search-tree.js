@@ -21,15 +21,15 @@ class BinarySearchTree {
     if (current === null) this.root = newNode;
 
     while (current) {
-      if (val < current.val && current) {
+      if (val < current.val) {
         if (current.left) {
           current = current.left;
         } else {
           current.left = newNode;
           break;
         }
-      }
-      else {
+      } 
+      else if (val >= current.val) {
         if (current.right) {
           current = current.right;
         } else {
@@ -53,25 +53,25 @@ class BinarySearchTree {
       return this;
     }
 
-    function _traverse(current) {
+    function _insertRecursively(current) {
       if (!current) return;
 
       if (val < current.val) {
         if (current.left) {
-          _traverse(current.left);
+          _insertRecursively(current.left);
         } else {
           current.left = newNode;
         }
       } else {
         if (current.right) {
-          _traverse(current.right);
+          _insertRecursively(current.right);
         } else {
           current.right = newNode;
         }
       }
     }
 
-    _traverse(this.root);
+    _insertRecursively(this.root);
     return this;
   }
 
@@ -102,12 +102,10 @@ class BinarySearchTree {
       if (!current) return;
 
       if (val === current.val) return current;
-
-      if (val < current.val) {
-        return _traverse(current.left);
-      } else {
-        return _traverse(current.right);
-      }
+        
+      return val < current.val
+        ? _traverse(current.left)
+        : _traverse(current.right);
     }
 
     return _traverse(root);
@@ -120,13 +118,13 @@ class BinarySearchTree {
     let visited = [];
     let root = this.root;
 
-    function _dfsPreOrder(current, visited){
+    function _dfsPreOrder(current){
       visited.push(current.val);
-      if (current.left) _dfsPreOrder(current.left, visited);
-      if (current.right) _dfsPreOrder(current.right, visited);
+      if (current.left) _dfsPreOrder(current.left);
+      if (current.right) _dfsPreOrder(current.right);
     }
 
-    _dfsPreOrder(root, visited);
+    _dfsPreOrder(root);
     return visited;
   }
 
@@ -137,13 +135,13 @@ class BinarySearchTree {
     let visited = [];
     let root = this.root;
 
-    function _dfsInOrder(current, visited){
-      if(current.left) _dfsInOrder(current.left, visited);
+    function _dfsInOrder(current){
+      if(current.left) _dfsInOrder(current.left);
       visited.push(current.val);
-      if(current.right) _dfsInOrder(current.right, visited);
+      if(current.right) _dfsInOrder(current.right);
     }
 
-    _dfsInOrder(root, visited);
+    _dfsInOrder(root);
     return visited;
   }
 
@@ -154,19 +152,19 @@ class BinarySearchTree {
     let visited = [];
     let root = this.root;
 
-    function _dfsPostOrder(current, visited){
-      if(current.left) _dfsPostOrder(current.left, visited);
-      if(current.right) _dfsPostOrder(current.right, visited);
+    function _dfsPostOrder(current){
+      if(current.left) _dfsPostOrder(current.left);
+      if(current.right) _dfsPostOrder(current.right);
       visited.push(current.val);
     }
 
-    _dfsPostOrder(root, visited);
+    _dfsPostOrder(root);
     return visited;
   }
 
   /** bfs(): Traverse the array using BFS.
    * Return an array of visited nodes. */
-
+  // TODO: create queue class, allows for future changes to better queue than an array when data grows
   bfs() {
     let visited = [];
     let toVisitQueue = [this.root];
